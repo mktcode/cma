@@ -57,17 +57,18 @@ Always use worktrees from the single central repository.
 1. Read customer requests and understand what changes they want made to the website.
 2. Read the repository's `AGENTS.md` file to understand any website-specific instructions.
 3. Optional: Reply to the customer email in case of questions or to clarify the request. Stop. The customer's reply will trigger the next step automatically.
-4. Update files in the staging worktree to implement the requested changes.
-5. Commit changes directly to the `staging` branch and push to the `origin` remote repository.
-6. Reply to the customer email with a link to the staging site and ask them to review the changes. Stop. The customer's reply will trigger the next step automatically.
-7. If the customer requests revisions, continue editing the staging worktree and repeat review steps.
-8. If the customer approves the changes:
+4. Ensure local branches and worktrees are up to date with the latest remote changes before making edits.
+5. Update files in the staging worktree to implement the requested changes.
+6. Commit changes directly to the `staging` branch and push to the `origin` remote repository.
+7. Reply to the customer email with a link to the staging site and ask them to review the changes. Stop. The customer's reply will trigger the next step automatically.
+8. If the customer requests revisions, continue editing the staging worktree and repeat review steps.
+9. If the customer approves the changes:
 
    * Ensure local branches are up to date before merging or pushing if needed.
    * Ensure the production worktree is clean before deployment.
    * Merge `staging` into `main` from within the production worktree using a normal merge commit.
    * Push the updated `main` branch to the `origin` remote repository.
-9. Reply to the customer email confirming that the changes are live.
+10. Reply to the customer email confirming that the changes are live.
 
 # Important Rules
 
