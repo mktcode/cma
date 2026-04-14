@@ -6,4 +6,9 @@ At least for smaller, more or less static websites?
 I'm building a "content management agent" that edits simple HTML files, CSS and only the most basic JavaScript.
 It uses a few general and a few site-specific skills (markdown instructions) and persists everything in a git repository.
 
-The foundation is [OpenClaw](https://github.com/openclaw/openclaw). This repository contains an `INIT.md` containing a prompt with platform-independent installation instructions, and a `skills/` directory.
+The foundation is [OpenClaw](https://github.com/openclaw/openclaw).
+
+## Setup
+
+Use `init.yml` to set up the server. It will install nginx, certbot, and a few other packages.
+

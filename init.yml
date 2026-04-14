@@ -1,0 +1,29 @@
+#cloud-config
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - fail2ban
+  - git
+  - nginx
+  - certbot
+  - python3-certbot-nginx
+
+write_files:
+  - path: /etc/motd
+    permissions: "0644"
+    content: |
+      ==============================================
+      Run `himalaya` to set up agent mailbox.
+      Set git credentials for agent: git config --global user.name "Your Name" && git config --global user.email "agent@example.com"
+      Clone agent workspace: git clone https://git.mktco.de/agent/agent ~/.openclaw/workspace
+      ==============================================
+
+runcmd:
+  - systemctl enable nginx
+  - systemctl start nginx
+  - systemctl enable fail2ban
+  - systemctl start fail2ban
+
+  - curl -sSL https://raw.githubusercontent.com/pimalaya/himalaya/master/install.sh | sh
