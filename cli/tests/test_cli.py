@@ -7,8 +7,8 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from website_tool.cli import main
-from website_tool.models import WebsiteMapping
+from cma_utils.cli import main
+from cma_utils.models import WebsiteMapping
 
 
 class StubService:

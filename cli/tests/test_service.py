@@ -6,9 +6,9 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from website_tool.models import WebsiteMapping
-from website_tool.service import MappingService
-from website_tool.validators import ValidationError
+from cma_utils.models import WebsiteMapping
+from cma_utils.service import MappingService
+from cma_utils.validators import ValidationError
 
 
 class FakeRepository:

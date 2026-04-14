@@ -9,9 +9,9 @@ from uuid import uuid4
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from website_tool.config import DatabaseConfig
-from website_tool.repository import MySQLMappingRepository
-from website_tool.service import MappingService
+from cma_utils.config import DatabaseConfig
+from cma_utils.repository import MySQLMappingRepository
+from cma_utils.service import MappingService
 
 
 @unittest.skipUnless(os.geteuid() == 0, "MariaDB socket auth test needs root")

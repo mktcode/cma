@@ -6,10 +6,10 @@ import os
 from pathlib import Path
 from typing import Any
 
-DEFAULT_DATABASE = "website_agent"
+DEFAULT_DATABASE = "cma"
 DEFAULT_SOCKET = "/run/mysqld/mysqld.sock"
-SYSTEM_CONFIG = Path("/etc/website-cli.json")
-USER_CONFIG = Path.home() / ".config" / "website-cli.json"
+SYSTEM_CONFIG = Path("/etc/cma-cli.json")
+USER_CONFIG = Path.home() / ".config" / "cma-cli.json"
 
 
 @dataclass(frozen=True)
@@ -34,17 +34,17 @@ def load_database_config() -> DatabaseConfig:
     settings.update(_load_json(SYSTEM_CONFIG))
     settings.update(_load_json(USER_CONFIG))
 
-    custom_path = os.environ.get("WEBSITE_CONFIG")
+    custom_path = os.environ.get("CMA_CONFIG")
     if custom_path:
         settings.update(_load_json(Path(custom_path)))
 
     env_overrides = {
-        "user": os.environ.get("WEBSITE_DB_USER"),
-        "password": os.environ.get("WEBSITE_DB_PASSWORD"),
-        "host": os.environ.get("WEBSITE_DB_HOST"),
-        "port": os.environ.get("WEBSITE_DB_PORT"),
-        "database": os.environ.get("WEBSITE_DB_NAME"),
-        "unix_socket": os.environ.get("WEBSITE_DB_SOCKET"),
+        "user": os.environ.get("CMA_DB_USER"),
+        "password": os.environ.get("CMA_DB_PASSWORD"),
+        "host": os.environ.get("CMA_DB_HOST"),
+        "port": os.environ.get("CMA_DB_PORT"),
+        "database": os.environ.get("CMA_DB_NAME"),
+        "unix_socket": os.environ.get("CMA_DB_SOCKET"),
     }
 
     for key, value in env_overrides.items():

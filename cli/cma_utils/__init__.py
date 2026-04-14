@@ -1,4 +1,4 @@
-"""Website mapping CLI package."""
+"""CMA CLI package."""
 
 from .cli import main
 
