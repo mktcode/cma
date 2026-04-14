@@ -19,6 +19,9 @@ write_files:
       ==============================================
       Run `himalaya` to set up the agent's mailbox.
       Add generated SSH public key to your agent's git platform account (GitHub, GitLab, Gitea, etc.) to enable git operations.
+      Install openclaw:
+        npm install -g openclaw@latest
+        openclaw onboard --install-daemon
       ==============================================
 
 runcmd:
@@ -34,3 +37,10 @@ runcmd:
   - ssh-keygen -t ed25519 -f /root/.ssh/id_ed25519 -N "" -C "root@$(hostname)"
 
   - curl -sSL https://raw.githubusercontent.com/pimalaya/himalaya/master/install.sh | sh
+
+  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+
+  - bash -c 'export NVM_DIR="$HOME/.nvm" && \
+      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && \
+      nvm install 24 && \
+      nvm alias default 24'
