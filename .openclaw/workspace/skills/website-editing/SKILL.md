@@ -1,6 +1,6 @@
 ---
 name: website-editing
-description: How to edit a website and track changes. Use for incoming customer requests. ALWAYS!
+description: How to edit and deploy a website and track changes. Use for incoming customer requests. ALWAYS!
 ---
 
 # Website Editing
