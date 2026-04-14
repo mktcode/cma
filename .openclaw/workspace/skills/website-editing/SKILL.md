@@ -5,29 +5,76 @@ description: How to edit a website and track changes. Use for incoming customer 
 
 # Website Editing
 
-Websites are git repositories.
+Websites are git repositories managed using **git worktrees**.
 
-Websites live in `/var/www/html/DOMAIN/main` and `/var/www/html/DOMAIN/staging`. Both directories have the same repository checked out, but the staging directory has the `staging` branch checked out, while the main directory has the `main` branch checked out.
+Each website has one central repository storage directory:
 
-The staging directory is connected to a remote repository to push changes to.
-The main directory is cloned from the staging directory as its origin.
+`/var/repos/DOMAIN`
 
-The domain of a website serves the `main` directory, while the staging domain (e.g. `staging.example.com`) serves the `staging` directory.
+Attached worktrees are used for deployment:
+
+* Production worktree: `/var/www/html/DOMAIN/main`
+* Staging worktree: `/var/www/html/DOMAIN/staging`
+
+The production worktree has the `main` branch checked out.
+The staging worktree has the persistent `staging` branch checked out.
+
+The domain of a website serves the production worktree.
+The staging domain (e.g. `staging.example.com`) serves the staging worktree.
+
 DNS records are set up and point to the server, and nginx is configured to serve the correct directories for each domain.
 
 Websites are static and consist of HTML, CSS, and JavaScript files. There is no database or server-side code.
-But each website is a git repository, and the agent can use git to manage changes, create branches, and merge changes from staging to live.
 
-The nginx configuration for the staging subdomain uses `add_header X-Robots-Tag "noindex, nofollow, noarchive";` to prevent search engines from indexing the staging site.
-The robots.txt is not version controlled (`.gitignore`) but should stay the same in both directories most of the time.
+The nginx configuration for the staging subdomain uses:
 
-A website repo contains an `AGENTS.md` file with instructions for the agent on how to edit the website. These instructions are authoritative and override any general instructions.
+`add_header X-Robots-Tag "noindex, nofollow, noarchive";`
+
+This prevents search engines from indexing the staging site.
+
+The `robots.txt` file is not version controlled (`.gitignore`) but should stay the same on both staging and production most of the time. It should disallow all crawling on staging and allow crawling on production.
+
+A website repo contains an `AGENTS.md` file with specific instructions for that website. These instructions are authoritative and override any general instructions.
+
+# Git Structure
+
+Repositories should be initialized like this:
+
+```bash
+git clone REPOSITORY_URL /var/repos/DOMAIN
+cd /var/repos/DOMAIN
+
+git worktree add /var/www/html/DOMAIN/main main
+git worktree add /var/www/html/DOMAIN/staging staging
+```
+
+Do NOT maintain separate cloned repositories for main/staging.
+Do NOT clone one checkout from another.
+Always use worktrees from the single central repository.
 
 # Workflow
 
-1. Read customer rquests and understand what changes they want to make to the website.
-2. Read the `AGENTS.md` file in the website repo to understand any specific instructions for this website.
+1. Read customer requests and understand what changes they want made to the website.
+2. Read the `AGENTS.md` file in the repository to understand any website-specific instructions.
 3. Optional: Reply to the customer email in case of questions or to clarify the request. Stop. The customer's reply will trigger the next step automatically.
-4. Update the files in the staging directory to implement the requested changes. Commit the changes to the `staging` branch and push to the remote repository.
-5. Reply to the customer email with a link to the staging site and ask them to review the changes. Stop. The customer's reply will trigger the next step automatically.
-6. If the customer approves the changes, merge the `staging` branch into the `main` branch and push the changes to the remote repository.
+4. Update files in the staging worktree to implement the requested changes.
+5. Commit changes directly to the `staging` branch and push to the remote repository.
+6. Reply to the customer email with a link to the staging site and ask them to review the changes. Stop. The customer's reply will trigger the next step automatically.
+7. If the customer requests revisions, continue editing the staging worktree and repeat review steps.
+8. If the customer approves the changes:
+  * Merge `staging` into `main` from within the production worktree using a normal merge commit.
+  * Push the updated `main` branch to the remote repository.
+9. Reply to the customer email confirming that the changes are live.
+
+# Important Rules
+
+* The `staging` branch is persistent and always represents the latest preview/development state.
+* The `main` branch always represents live production.
+* Approved changes are merged from `staging` into `main`.
+* Never reset or rewrite the `staging` branch unless explicitly instructed.
+* Never edit the production worktree directly unless explicitly instructed.
+* When asked to restore an earlier version of the website, do not move branch pointers backward.
+* Do not check out old commits for deployment.
+* Do not reset or rewrite history.
+* Instead, use the previous version only as reference, restore the necessary file contents into the current staging worktree, and commit those changes as a new commit.
+* All changes, including restorations, must be recorded as new forward-moving commits.
