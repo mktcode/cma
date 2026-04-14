@@ -9,21 +9,28 @@ packages:
   - nginx
   - certbot
   - python3-certbot-nginx
+  - mariadb-server
+  - jq
 
 write_files:
   - path: /etc/motd
     permissions: "0644"
     content: |
       ==============================================
-      Run `himalaya` to set up agent mailbox.
-      Set git credentials for agent: git config --global user.name "Your Name" && git config --global user.email "agent@example.com"
-      Clone agent workspace: git clone https://git.mktco.de/agent/agent ~/.openclaw/workspace
+      Run `himalaya` to set up the agent's mailbox.
+      Add generated SSH public key to your agent's git platform account (GitHub, GitLab, Gitea, etc.) to enable git operations.
       ==============================================
 
 runcmd:
   - systemctl enable nginx
   - systemctl start nginx
+
   - systemctl enable fail2ban
   - systemctl start fail2ban
+
+  - systemctl enable mariadb
+  - systemctl start mariadb
+
+  - ssh-keygen -t ed25519 -f /root/.ssh/id_ed25519 -N "" -C "root@$(hostname)"
 
   - curl -sSL https://raw.githubusercontent.com/pimalaya/himalaya/master/install.sh | sh
