@@ -26,13 +26,13 @@ write_files:
     permissions: "0644"
     content: |
       ==============================================
-      # Configure your agent's IMAP account in /root/.mbsyncrc
+      # Configure your agent's IMAP and SMTP account
       vim /root/.mbsyncrc
+      vim /root/.msmtprc
 
       # Add generated SSH public key to your agent's git platform account (GitHub, GitLab, Gitea, etc.)
       cat /root/.ssh/id_ed25519.pub
       ==============================================
-  # mbsync config
   - path: /root/.mbsyncrc
     permissions: "0600"
     content: |
@@ -42,14 +42,11 @@ write_files:
       Pass yourpassword
       Port 993
       SSLType IMAPS
-
       IMAPStore remote
       Account myaccount
-
       MaildirStore local
       Path ~/mail/
       Inbox ~/mail/Inbox/
-
       Channel inbox
       Far :remote:
       Near :local:
@@ -58,6 +55,20 @@ write_files:
       Sync All
       Expunge Both
       SyncState *
+  - path: /root/.msmtprc
+    permissions: "0600"
+    content: |
+      defaults
+      auth           on
+      tls            on
+      tls_trust_file /etc/ssl/certs/ca-certificates.crt
+      logfile        ~/.msmtp.log
+      account        default
+      host           smtp.yourprovider.com
+      port           587
+      from           your@email.com
+      user           your@email.com
+      password       yourpassword
 
 runcmd:
   - systemctl enable nginx
