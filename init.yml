@@ -10,6 +10,7 @@ packages:
   - isync
   - jq
   - mariadb-server
+  - msmtp
   - nginx
   - nodejs
   - notmuch
@@ -73,4 +74,4 @@ runcmd:
   - npm install -g @mariozechner/pi-coding-agent
   - pi install git:github.com/mktcode/cma
 
-  - mysql -u root -p < /root/.pi/agent/git/github.com/mktcode/cma/schema.sql
+  - mysql < /root/.pi/agent/git/github.com/mktcode/cma/schema.sql
