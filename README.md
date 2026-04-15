@@ -6,7 +6,7 @@ At least for smaller, more or less static websites?
 I'm building a "content management agent" that edits simple HTML files, CSS and only the most basic JavaScript.
 It uses a few general and a few site-specific skills (markdown instructions) and persists everything in a git repository.
 
-The foundation is [OpenClaw](https://github.com/openclaw/openclaw).
+The foundation is [Pi Coding Agent](https://pi.dev/).
 
 ## Setup
 
