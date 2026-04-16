@@ -1,0 +1,31 @@
+#!/bin/bash
+set -euo pipefail
+
+sql_escape() {
+    printf '%s' "$1" | sed "s/'/''/g"
+}
+
+mbsync inbox
+notmuch new
+
+notmuch search --output=messages tag:unread | while read -r msg; do
+    THREAD=$(notmuch search --output=threads --query=sexp "(id \"$msg\")" | head -n1)
+
+    ESC_MSG=$(sql_escape "$msg")
+    ESC_THREAD=$(sql_escape "$THREAD")
+
+    EXISTS=$(mysql -N -B yourdb -e "
+        SELECT COUNT(*)
+        FROM mail_queue
+        WHERE message_id='${ESC_MSG}'
+    ")
+
+    if [ "$EXISTS" = "0" ]; then
+        mysql yourdb -e "
+            INSERT INTO mail_queue (message_id, thread_id, created_at)
+            VALUES ('${ESC_MSG}', '${ESC_THREAD}', NOW())
+        "
+
+        /path/to/your-program "$THREAD"
+    fi
+done

@@ -34,3 +34,14 @@ CREATE TABLE IF NOT EXISTS sender_website_links (
     FOREIGN KEY (website_id) REFERENCES websites(id)
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS mail_queue (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message_id VARCHAR(255) UNIQUE NOT NULL,
+    thread_id VARCHAR(255) NOT NULL,
+    security_checks_passed BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at DATETIME NOT NULL,
+    completed_at DATETIME NULL,
+    replied_at DATETIME NULL,
+    reply_content TEXT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
