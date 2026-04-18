@@ -74,18 +74,20 @@ write_files:
     permissions: "0644"
     content: |
       [program:cma]
+      directory=/root/cma
+      environment=CMA_DATA_DIR="/root/cma/.cma"
       command=/usr/bin/node /root/cma/dist/index.js
       autostart=true
       autorestart=true
-      stderr_logfile=/var/log/cma.err.log
-      stdout_logfile=/var/log/cma.out.log
+      stderr_logfile=/root/cma/.cma/cma.err.log
+      stdout_logfile=/root/cma/.cma/cma.out.log
 
 runcmd:
   - npm install -g @mariozechner/pi-coding-agent
 
   - git clone https://github.com/mktcode/cma /root/cma
   - cd /root/cma && npm install && npm run build
-  - mkdir -p /var/lib/cma/sessions
+  - mkdir -p /root/cma/.cma/sessions
 
   - mkdir -p /root/.pi/agent/skills/website-editing
   - ln -s /root/cma/skills/website-editing /root/.pi/agent/skills/website-editing

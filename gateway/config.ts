@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 export interface ChannelConfig {
   enabled: boolean;
@@ -16,6 +17,7 @@ export interface EmailConfig extends ChannelConfig {
 }
 
 export interface GatewayConfig {
+  projectDir: string;
   envFilePath: string;
   dataDir: string;
   dbPath: string;
@@ -88,17 +90,26 @@ function parsePositiveInteger(value: string | undefined, fallback: number, name:
   return parsed;
 }
 
+function resolveProjectDir(): string {
+  const currentFilePath = fileURLToPath(import.meta.url);
+  const currentDir = path.dirname(currentFilePath);
+
+  return path.resolve(currentDir, "..");
+}
+
 export function loadConfig(): GatewayConfig {
-  const envFilePath = process.env.CMA_ENV_FILE || path.join(process.cwd(), ".env");
+  const projectDir = resolveProjectDir();
+  const envFilePath = process.env.CMA_ENV_FILE || path.join(projectDir, ".env");
   loadEnvFile(envFilePath);
 
-  const dataDir = process.env.CMA_DATA_DIR || "/var/lib/cma";
+  const dataDir = process.env.CMA_DATA_DIR || path.join(projectDir, ".cma");
   const telegramToken = process.env.TELEGRAM_TOKEN || "";
   const telegramAllowedIds = parseCsv(process.env.TELEGRAM_ALLOWED_IDS);
   const emailAllowed = parseCsv(process.env.EMAIL_ALLOWED);
   const mailFrom = process.env.MAIL_FROM || "";
 
   return {
+    projectDir,
     envFilePath,
     dataDir,
     dbPath: path.join(dataDir, "gateway.db"),
