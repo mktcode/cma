@@ -1,0 +1,12 @@
+node_modules/
+dist/
+
+.env
+.env.*
+
+.cma/
+
+*.log
+npm-debug.log*
+
+*.tsbuildinfo

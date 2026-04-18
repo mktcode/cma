@@ -74,7 +74,7 @@ write_files:
     permissions: "0644"
     content: |
       [program:cma]
-      command=/usr/bin/node /root/cma/index.js
+      command=/usr/bin/node /root/cma/dist/index.js
       autostart=true
       autorestart=true
       stderr_logfile=/var/log/cma.err.log
@@ -85,6 +85,7 @@ runcmd:
 
   - git clone https://github.com/mktcode/cma /root/cma
   - cd /root/cma && npm install && npm run build
+  - mkdir -p /var/lib/cma/sessions
 
   - mkdir -p /root/.pi/agent/skills/website-editing
   - ln -s /root/cma/skills/website-editing /root/.pi/agent/skills/website-editing
