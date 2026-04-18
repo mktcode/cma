@@ -1,0 +1,19 @@
+{
+  "name": "cma",
+  "version": "1.0.0",
+  "description": "After 20+ years in web development, coding agents made me rethink the CMS. Can't we throw away the old paradigm of admin panels, databases, and complex workflows? At least for smaller, more or less static websites?",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mktcode/cma.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mktcode/cma/issues"
+  },
+  "homepage": "https://github.com/mktcode/cma#readme"
+}
