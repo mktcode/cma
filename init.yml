@@ -22,6 +22,7 @@ packages:
   - python3-certbot-nginx
   - python3-pip
   - ripgrep
+  - supervisor
   - vim
 
 write_files:
@@ -69,8 +70,25 @@ write_files:
       from           your@email.com
       user           your@email.com
       password       yourpassword
+  - path: /etc/supervisor/conf.d/cma.conf
+    permissions: "0644"
+    content: |
+      [program:cma]
+      command=/usr/bin/node /root/cma/index.js
+      autostart=true
+      autorestart=true
+      stderr_logfile=/var/log/cma.err.log
+      stdout_logfile=/var/log/cma.out.log
 
 runcmd:
+  - npm install -g @mariozechner/pi-coding-agent
+
+  - git clone https://github.com/mktcode/cma /root/cma
+  - cd /root/cma && npm install && npm run build
+
+  - mkdir -p /root/.pi/agent/skills/website-editing
+  - ln -s /root/cma/skills/website-editing /root/.pi/agent/skills/website-editing
+
   - systemctl enable nginx
   - systemctl start nginx
 
@@ -80,4 +98,5 @@ runcmd:
   - systemctl enable mariadb
   - systemctl start mariadb
 
-  - npm install -g @mariozechner/pi-coding-agent
+  - systemctl enable supervisor
+  - systemctl start supervisor
